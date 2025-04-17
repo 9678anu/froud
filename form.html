@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Report Form</title>
+    <style>
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    background-color: #fff;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.radio {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.unique{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 5px 0;
+    padding: 0 10px; /* Added padding for better spacing */
+}
+.radio-group {
+    display: flex;
+    align-items: center;
+    width: calc(50% - 5px); /* Two per row */
+    margin: 5px 0;
+    box-sizing: border-box;
+}
+.labelhead{
+    color: #333;
+    font-size: 18px; /* Increased font size for better readability */
+    font-weight: bold; /* Added bold for emphasis */
+    margin-bottom: 10px; /* Added margin for spacing */
+    text-align: left; /* Align text to the left for better readability */
+    width: 100%; /* Full width for label */
+}
+.radio-group input[type="radio"] {
+    margin: 0 10px 0 0; /* Increased margin for better spacing */
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+    padding: 15px; /* Reduced padding for better fit */
+    background-color: #e6f0fa;
+    border: 1px solid #b3d7ff;
+    border-radius: 4px;
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+    box-sizing: border-box;
+    word-wrap: break-word; /* Prevent text overflow */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transitions */
+}
+
+.radio-group input[type="radio"]:checked + label {
+    background-color: #cce5ff;
+    border-color: #007bff;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+    position: relative;
+    padding: 15px 0;
+    width: 100%; /* Changed to 100% for responsiveness */
+    max-width: 1200px; /* Maintain max width */
+}
+
+.progress-step {
+    flex: 0;
+    text-align: center;
+    font-size: 0; /* Hide text */
+    color: #666;
+    position: relative;
+    z-index: 1;
+    width: 24px; /* Match dot size */
+}
+
+.progress-step::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #f0f0f0 50%, #d0d0d0 100%);
+    border: 3px solid #ddd;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.progress-step.active::before {
+    background: linear-gradient(135deg, #007bff 50%, #0056b3 100%);
+    border-color: #004085;
+    transform: scale(1.1);
+}
+
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 60px;
+    width: calc(100% - 120px);
+    height: 6px;
+    background: repeating-linear-gradient(
+        45deg,
+        #f0f0f0,
+        #f0f0f0 10px,
+        #e0e0e0 10px,
+        #e0e0e0 20px
+    );
+    border-radius: 3px;
+    z-index: 0;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 60px;
+    width: 0;
+    height: 6px;
+    background: linear-gradient(to right, #007bff, #00c4ff);
+    border-radius: 3px;
+    z-index: 0;
+    transition: width 0.4s ease-in-out;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.progress-step:nth-child(2).active ~ .progress-bar::after {
+    width: calc(50% - 60px);
+}
+
+.progress-step:nth-child(3).active ~ .progress-bar::after {
+    width: calc(100% - 120px);
+}
+
+form {
+    width: 100%;
+    max-width: 1200px; /* Match progress bar max-width */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.form-step {
+    display: none;
+    padding: 20px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.form-step.active {
+    display: block;
+}
+
+h2 {
+    font-size: 32px;
+    color: #1a3c55;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px; /* Reduced slightly for better hierarchy */
+    color: #666;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 16px; /* Added for consistency */
+    color: #333;
+    margin-bottom: 8px; /* Added for spacing */
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px; /* Slightly reduced for better fit */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px; /* Reduced for consistency */
+    box-sizing: border-box;
+    margin-bottom: 15px; /* Added for spacing */
+    transition: border-color 0.3s ease; /* Smooth focus effect */
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Subtle glow */
+}
+
+textarea {
+    height: 120px; /* Slightly increased for usability */
+    resize: vertical;
+}
+
+.two-column {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Added for responsiveness */
+}
+
+.two-column > * {
+    flex: 1;
+    min-width: 200px; /* Prevent collapse on smaller screens */
+}
+
+button {
+    padding: 12px 24px; /* Slightly increased for better click area */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* Increased for readability */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover */
+}
+
+.back-btn {
+    margin-top: 20px;
+    background-color: transparent;
+    color: #1a3c55;
+    padding: 12px 24px;
+    font-size: 22px;
+    font-weight: bold;
+    border: 2px solid #1a3c55;
+    margin-right: 10px;
+}
+
+.continue-btn, .submit-btn {
+    margin-top: 20px;
+    background-color: #1a3c55;
+    padding: 12px 24px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.clear {
+    clear: both;
+}
+
+img {
+    width: 100%;
+    display: block;
+    max-width: 100%; /* Prevent overflow */
+    height: auto; /* Maintain aspect ratio */
+}
+
+footer {
+    width: 100%;
+    max-width: 100%; /* Prevent footer image overflow */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .progress-bar, form {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+
+    .progress-bar::before, .progress-bar::after {
+        left: 40px;
+        width: calc(100% - 80px);
+    }
+}
+
+@media (max-width: 768px) {
+    .radio-group {
+        width: 100%; /* Stack radio groups on smaller screens */
+    }
+
+    .two-column {
+        flex-direction: column;
+    }
+
+    .two-column > * {
+        min-width: 100%;
+    }
+
+    button {
+        width: 100%; /* Full-width buttons on mobile */
+        margin-bottom: 10px;
+    }
+
+    .back-btn, .continue-btn, .submit-btn {
+        float: none; /* Remove float for mobile */
+    }
+}
+    </style>
+</head>
+<body>
+    <img src="header.png" width="100%">
+    <div class="progress-bar">
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+    </div>
+
+    <form id="fraudReportForm">
+        <!-- Step 1: Problem Selection -->
+        <div class="form-step active" data-step="1">
+            <h2>Is your report about any of these common problems?</h2>
+            <p>Choose the best fit. If you don’t see your problem, choose "Something else."</p>
+            <div class="radio">
+                <div class="radio-group">
+<label for="impersonator"> <input type="radio" id="impersonator" name="problem" value="impersonator" required>
+    An impersonator (ex: fake government, business, love interest, grandchild)</label>
+                </div>
+                <div class="radio-group">
+<label for="job_investment"><input type="radio" id="job_investment" name="problem" value="job_investment">
+    Job, investment, money-making opportunity, franchise</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="phone_internet"><input type="radio" id="phone_internet" name="problem" value="phone_internet">
+    Phone, internet, TV service</label>
+                </div>
+                <div class="radio-group">
+<label for="health"><input type="radio" id="health" name="problem" value="health">
+    Health (ex: weight loss, eye care, treatment)</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="annoying_call"><input type="radio" id="annoying_call" name="problem" value="annoying_call">
+    Just an annoying call</label>
+                </div>
+                <div class="radio-group">
+<label for="online_shopping"><input type="radio" id="online_shopping" name="problem" value="online_shopping">
+    Online shopping</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="sweepstakes"><input type="radio" id="sweepstakes" name="problem" value="sweepstakes">
+    Sweepstakes, prize, lottery</label>
+                </div>
+                <div class="radio-group">
+<label for="auto"><input type="radio" id="auto" name="problem" value="auto">
+    Auto sale, repair</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="credit"><input type="radio" id="credit" name="problem" value="credit">
+    Credit, debt, loan (ex: debt collection, credit report, student loan debt relief)</label>
+                </div>
+                <div class="radio-group">
+<label for="something_else"><input type="radio" id="something_else" name="problem" value="something_else">
+    Something else (we’ll get it to the right place)</label>
+                </div>
+            </div>
+            <h2>Who were they pretending to be?</h2>
+            <div class="radio">
+                <div class="radio-group">
+<label for="pretend_government"><input type="radio" id="pretend_government" name="pretend" value="government">
+    Government authority or agency (ex: Social Security, IRS, Medicare, Medicaid, police)</label>
+                </div>
+                <div class="radio-group">
+<label for="pretend_business"><input type="radio" id="pretend_business" name="pretend" value="business">
+    Well-known or trusted business (ex: tech support, utility company, bank)</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="pretend_love"><input type="radio" id="pretend_love" name="pretend" value="love">
+    Love interest (ex: someone on a dating site)</label>
+                </div>
+                <div class="radio-group">
+<label for="pretend_grandchild"><input type="radio" id="pretend_grandchild" name="pretend" value="grandchild">
+    Grandchild, family member, or friend</label>
+                </div>
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="pretend_boss"><input type="radio" id="pretend_boss" name="pretend" value="boss">
+    Your boss or co-worker</label>
+                </div>
+                <div class="radio-group">
+<label for="pretend_charity"><input type="radio" id="pretend_charity" name="pretend" value="charity">
+    Charity or charitable cause</label>
+                </div>
+            </div>
+            <button type="button" class="continue-btn" onclick="nextStep(2)">Continue →</button>
+            <div class="clear"></div>
+        </div>
+
+        <!-- Step 2: Report Details -->
+        <div class="form-step" data-step="2">
+            <h2>Report Details</h2>
+            <p>Please share as much as you know. The details help law enforcement investigations.</p>
+            <div class="radio">
+                <div class="radio-group">
+<label for="payment_yes"><input type="radio" id="payment_yes" name="payment" value="yes">
+    Yes</label>
+                </div>
+                <div class="radio-group">
+<label for="payment_no"><input type="radio" id="payment_no" name="payment" value="no" checked>
+    No</label>
+                </div>
+            </div>
+            <label for="amount">How much money did you pay the scammer in total?            <input type="number" id="amount" name="amount" placeholder="Enter amount in USD" min="0" step="0.01">
+            </label>
+            <label for="payment_method">How did you pay or send the money?
+            <select id="payment_method" name="payment_method">
+                <option value="">Select</option>
+                <option value="payment_app">Payment App or Service (ex. Zelle, PayPal, Cash App)</option>
+<option value="bank_wire">Bank Wire Transfer or Payment</option>
+<option value="credit_card">Credit Card</option>
+<option value="debit_card">Debit Card</option>
+<option value="gift_card">Gift Card or Reload Card (ex. Apple, Google Play, MoneyPak)</option>
+<option value="wire_transfer">Wire Transfer Service (ex. Western Union, MoneyGram)</option>
+<option value="crypto">Cryptocurrency (ex. Bitcoin)</option>
+<option value="money_order">Money Order</option>
+<option value="check">Check</option>
+<option value="cash">Cash</option>
+
+            </select></label>
+            <label for="payment_date">When did you most recently pay or send money (mm/dd/yyyy)?</label>
+            <input type="date" id="payment_date" name="payment_date">
+            <label for="first_contact">How did it start (ex: how did they first contact you, where did you see an ad)?</label>
+            <select id="first_contact" name="first_contact">
+                <option value="phone_call">Phone Call</option>
+<option value="social_media">Social Media (ex. Facebook, Instagram)</option>
+<option value="online_ad">Online Ad or Pop-up</option>
+<option value="website_or_app">Website or App</option>
+<option value="email">Email</option>
+<option value="text">Text</option>
+<option value="mail">Mail</option>
+<option value="in_person">In Person</option>
+<option value="tv_or_radio">TV or Radio</option>
+<option value="print_media">Print Media (ex. magazine, newspaper)</option>
+
+            </select>
+            <h2>Details about the scammer</h2>
+            <p>Please share as much as you know. The details help law enforcement investigations.</p>
+            <label for="agency">Which government agency did they pretend to be?</label>
+            <input type="text" id="agency" name="agency" placeholder="Agency Name">
+            <div class="two-column">
+                <input type="text" id="scammer_first_name" name="scammer_first_name" placeholder="First Name">
+                <input type="text" id="scammer_last_name" name="scammer_last_name" placeholder="Last Name">
+            </div>
+            <div class="radio">
+                <div class="radio-group">
+<label for="scammer_info_yes"><input type="radio" id="scammer_info_yes" name="scammer_info" value="yes">
+    Yes</label>
+                </div>
+                <div class="radio-group">
+<label for="scammer_info_no"><input type="radio" id="scammer_info_no" name="scammer_info" value="no" checked>
+    No</label>
+                </div>
+            </div>
+            <h2>Comments</h2>
+            <p>Describe what happened<br> Tell us what happened in your own words. Include specific details you remember <br>Do not include any sensitive information, such as SSN, DOB, driver's license numbers, account numbers, medical history, etc.</p>
+            <textarea id="description" name="description" rows="6" maxlength="3500"></textarea>
+            <button type="button" class="back-btn" onclick="prevStep(1)">← Back</button>
+            <button type="button" class="continue-btn" onclick="nextStep(3)">Continue →</button>
+            <div class="clear"></div>
+        </div>
+
+        <!-- Step 3: About You -->
+        <div class="form-step" data-step="3">
+            <h2>About You</h2>
+            <div class="radio">
+                <div class="radio-group">
+<label for="filing_yes"><input type="radio" id="filing_yes" name="filing" value="yes">
+    Yes</label>
+                </div>
+                <div class="radio-group">
+<label for="filing_no"><input type="radio" id="filing_no" name="filing" value="no" checked>
+    No</label>
+                </div>
+            </div>
+            <h2>Your Details</h2>
+            <div class="two-column">
+                <input type="text" id="first_name" name="first_name" placeholder="First Name">
+                <input type="text" id="last_name" name="last_name" placeholder="Last Name">
+            </div>
+            <div class="unique">
+            <label class="labelhead">Country or Region</label>
+            <select id="country" name="country">
+                <option value="">Select</option>
+                <option>Afghanistan</option>
+<option>Albania</option>
+<option>Algeria</option>
+<option>Andorra</option>
+<option>Angola</option>
+<option>Antigua and Barbuda</option>
+<option>Argentina</option>
+<option>Armenia</option>
+<option>Australia</option>
+<option>Austria</option>
+<option>Azerbaijan</option>
+<option>Bahamas</option>
+<option>Bahrain</option>
+<option>Bangladesh</option>
+<option>Barbados</option>
+<option>Belarus</option>
+<option>Belgium</option>
+<option>Belize</option>
+<option>Benin</option>
+<option>Bhutan</option>
+<option>Bolivia</option>
+<option>Bosnia and Herzegovina</option>
+<option>Botswana</option>
+<option>Brazil</option>
+<option>Brunei</option>
+<option>Bulgaria</option>
+<option>Burkina Faso</option>
+<option>Burundi</option>
+<option>Cabo Verde</option>
+<option>Cambodia</option>
+<option>Cameroon</option>
+<option>Canada</option>
+<option>Central African Republic</option>
+<option>Chad</option>
+<option>Chile</option>
+<option>China</option>
+<option>Colombia</option>
+<option>Comoros</option>
+<option>Congo, Democratic Republic of the</option>
+<option>Congo, Republic of the</option>
+<option>Costa Rica</option>
+<option>Croatia</option>
+<option>Cuba</option>
+<option>Cyprus</option>
+<option>Czech Republic</option>
+<option>Denmark</option>
+<option>Djibouti</option>
+<option>Dominica</option>
+<option>Dominican Republic</option>
+<option>Ecuador</option>
+<option>Egypt</option>
+<option>El Salvador</option>
+<option>Equatorial Guinea</option>
+<option>Eritrea</option>
+<option>Estonia</option>
+<option>Eswatini</option>
+<option>Ethiopia</option>
+<option>Fiji</option>
+<option>Finland</option>
+<option>France</option>
+<option>Gabon</option>
+<option>Gambia</option>
+<option>Georgia</option>
+<option>Germany</option>
+<option>Ghana</option>
+<option>Greece</option>
+<option>Grenada</option>
+<option>Guatemala</option>
+<option>Guinea</option>
+<option>Guinea-Bissau</option>
+<option>Guyana</option>
+<option>Haiti</option>
+<option>Honduras</option>
+<option>Hungary</option>
+<option>Iceland</option>
+<option>India</option>
+<option>Indonesia</option>
+<option>Iran</option>
+<option>Iraq</option>
+<option>Ireland</option>
+<option>Israel</option>
+<option>Italy</option>
+<option>Jamaica</option>
+<option>Japan</option>
+<option>Jordan</option>
+<option>Kazakhstan</option>
+<option>Kenya</option>
+<option>Kiribati</option>
+<option>Kuwait</option>
+<option>Kyrgyzstan</option>
+<option>Laos</option>
+<option>Latvia</option>
+<option>Lebanon</option>
+<option>Lesotho</option>
+<option>Liberia</option>
+<option>Libya</option>
+<option>Liechtenstein</option>
+<option>Lithuania</option>
+<option>Luxembourg</option>
+<option>Madagascar</option>
+<option>Malawi</option>
+<option>Malaysia</option>
+<option>Maldives</option>
+<option>Mali</option>
+<option>Malta</option>
+<option>Marshall Islands</option>
+<option>Mauritania</option>
+<option>Mauritius</option>
+<option>Mexico</option>
+<option>Micronesia</option>
+<option>Moldova</option>
+<option>Monaco</option>
+<option>Mongolia</option>
+<option>Montenegro</option>
+<option>Morocco</option>
+<option>Mozambique</option>
+<option>Myanmar</option>
+<option>Namibia</option>
+<option>Nauru</option>
+<option>Nepal</option>
+<option>Netherlands</option>
+<option>New Zealand</option>
+<option>Nicaragua</option>
+<option>Niger</option>
+<option>Nigeria</option>
+<option>North Korea</option>
+<option>North Macedonia</option>
+<option>Norway</option>
+<option>Oman</option>
+<option>Pakistan</option>
+<option>Palau</option>
+<option>Panama</option>
+<option>Papua New Guinea</option>
+<option>Paraguay</option>
+<option>Peru</option>
+<option>Philippines</option>
+<option>Poland</option>
+<option>Portugal</option>
+<option>Qatar</option>
+<option>Romania</option>
+<option>Russia</option>
+<option>Rwanda</option>
+<option>Saint Kitts and Nevis</option>
+<option>Saint Lucia</option>
+<option>Saint Vincent and the Grenadines</option>
+<option>Samoa</option>
+<option>San Marino</option>
+<option>Sao Tome and Principe</option>
+<option>Saudi Arabia</option>
+<option>Senegal</option>
+<option>Serbia</option>
+<option>Seychelles</option>
+<option>Sierra Leone</option>
+<option>Singapore</option>
+<option>Slovakia</option>
+<option>Slovenia</option>
+<option>Solomon Islands</option>
+<option>Somalia</option>
+<option>South Africa</option>
+<option>South Korea</option>
+<option>South Sudan</option>
+<option>Spain</option>
+<option>Sri Lanka</option>
+<option>Sudan</option>
+<option>Suriname</option>
+<option>Sweden</option>
+<option>Switzerland</option>
+<option>Syria</option>
+<option>Tajikistan</option>
+<option>Tanzania</option>
+<option>Thailand</option>
+<option>Timor-Leste</option>
+<option>Togo</option>
+<option>Tonga</option>
+<option>Trinidad and Tobago</option>
+<option>Tunisia</option>
+<option>Turkey</option>
+<option>Turkmenistan</option>
+<option>Tuvalu</option>
+<option>Uganda</option>
+<option>Ukraine</option>
+<option>United Arab Emirates</option>
+<option>United Kingdom</option>
+<option>United States</option>
+<option>Uruguay</option>
+<option>Uzbekistan</option>
+<option>Vanuatu</option>
+<option>Vatican City</option>
+<option>Venezuela</option>
+<option>Vietnam</option>
+<option>Yemen</option>
+<option>Zambia</option>
+<option>Zimbabwe</option>
+            </select></div>
+            <input type="text" id="address1" name="address1" placeholder="Street Address 1 (street address, PO Box)">
+            <input type="text" id="address2" name="address2" placeholder="Street Address 2 (apartment, suite, unit, building, floor)">
+            <div class="two-column">
+                <input type="text" id="city" name="city" placeholder="City">
+                <input type="text" id="state" name="state" placeholder="State/Province/Region">
+            </div>
+            <div class="two-column">
+                <input type="text" id="postal_code" name="postal_code" placeholder="Postal Code">
+                <input type="email" id="email" name="email" placeholder="Email Address">
+
+            </div>
+            <div class="two-column">
+                <input type="tel" id="phone" name="phone" placeholder="Phone Number">
+                <div class="unique">                <label class="labelhead">phone_type</label>
+                <select id="phone_type"placeholder="phone_type" name="phone_type">
+<option value="mobile">Landline</option>
+<option value="home">CELL PHONE</option>
+                </select></div>
+            </div>
+            <p>Email address is required if you want an email confirming we received your report.</p>
+            <div class="unique"><label class="labelhead">Age</label>
+            <select id="age_range" name="age_range">
+                <option value="">Select</option>
+                <option>12 and Under</option>
+<option>13 - 17</option>
+<option>18 - 19</option>
+<option>20 - 29</option>
+<option>30 - 39</option>
+<option>40 - 49</option>
+<option>50 - 59</option>
+<option>60 - 64</option>
+<option>65 - 69</option>
+<option>70 - 79</option>
+<option>80 and Over</option>
+
+            </select></div>
+            <div class="unique">
+            <label class="labelhead">Military_Status</label>
+
+            <select id="military_status" name="military_status">
+                <option value="">Select</option>
+                <option>Active Duty Servicemember</option>
+                <option>Spouse/Dependent of Active Duty Servicemember</option>
+                <option>Military Retiree/Veteran</option>
+                <option>Reserve/National Guard</option>
+                <option>None of These</option>
+            </select></div>
+            <div class="two-column">
+                <div class="unique">
+                <label class="labelhead">Military_Rank</label>
+                <select id="military_rank" name="military_rank">
+                    <option value="">Select</option>
+                    <option>Enlisted</option>
+                    <option>Officer</option>
+                </select></div>
+                <div class="unique">
+                <label class="labelhead">Military_Branch</label>
+                <select id="military_Branch" name="military_Branch">
+                    <option value="">Select</option>
+                    <option>U.S. Army</option>
+<option>U.S. Marines</option>
+<option>U.S. Navy</option>
+<option>U.S. Air Force</option>
+<option>U.S. Coast Guard</option>
+<option>U.S. Space Force</option>
+
+                </select></div>
+            </div>
+            <label class="labelhead">
+                Are you filing on behalf of your small business or organization?
+            </label>
+            <div class="radio">
+                <div class="radio-group">
+                   
+<label for="business_yes"><input type="radio" id="business_yes" name="business" value="yes">
+    Yes</label>
+                </div>
+                <div class="radio-group">
+<label for="business_no"><input type="radio" id="business_no" name="business" value="no" checked>
+    No</label>
+                </div>
+            </div>
+            <button type="button" class="back-btn" onclick="prevStep(2)">← Back</button>
+            <button type="submit" class="submit-btn">Submit →</button>
+            <div class="clear"></div>
+        </div>
+    </form>
+    <footer>
+        <img src="footer.png" width="100%">
+    </footer>
+    <script>
+        let currentStep = 1;
+
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+            document.querySelectorAll('.progress-step').forEach((s, i) => {
+                s.classList.toggle('active', i < step);
+            });
+            currentStep = step;
+        }
+
+        function nextStep(step) {
+            if (currentStep === 1 && !document.querySelector('input[name="problem"]:checked') && !document.querySelector('input[name="pretend"]:checked')) {
+                alert('Please select a problem or who they were pretending to be.');
+                return;
+            }
+            showStep(step);
+        }
+
+        function prevStep(step) {
+            showStep(step);
+        }
+
+        document.getElementById('fraudReportForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            console.log('Submitted Data:', data);
+            alert('Form submitted! Check console for data.');
+        });
+    </script>
+</body>
+</html>
